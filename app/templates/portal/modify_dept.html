@@ -1,7 +1,37 @@
 {% extends 'portal.html' %}
 
 {%block page_content%}
-     <div class="bg-mattBlackLight p-3">
-        <h4 class="mb-2">Create/ Delete Department</h4>
+     <div class="bg-mattBlackLight p-3 mb-4">
+        <h4 class="mb-2">Create Department/Faculty</h4>
      </div>
+     <h4>Create Faculty</h4><hr style="background-color: #fff;">
+     <form action="{{url_for('portal.create_faculty')}}" method="POST">
+     	{{ makefacultyform.hidden_tag() }}
+     	{% from 'includes/_formhelpers.html' import render_field %}
+	  <div class="form-group">
+	    <label for="facultyname">Faculty name</label>
+	    {{render_field(makefacultyform.name, class_='form-control', id='facultyname', required='true')}}
+	  </div>
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	<div class="mt-4">
+		<h4>Create Department</h4><hr style="background-color: #fff;">
+	     <form action="{{url_for('portal.create_department')}}" method="POST">
+	     	{{ makedepartmentform.hidden_tag() }}
+	     	{% from 'includes/_formhelpers.html' import render_field %}
+		  <div class="form-group">
+		  	<div class="row">
+		  	<div class="col-md-6">
+			    <label for="departmentname">Department name</label>
+			    {{render_field(makedepartmentform.name, class_='form-control', id='departmentname', required='true')}}
+			</div>
+			<div class='col-md-6'>
+				<label for="relatedfaculty"></label>
+		    	{{render_field(makedepartmentform.faculty, class_='form-control', id='relatedfaculty', required='true')}}
+			</div>
+		</div>
+		  </div>
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
 {%endblock%} 
