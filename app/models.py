@@ -112,6 +112,7 @@ class Department(db.Model):
     name = db.Column(db.String(80), unique=True)
     students = db.relationship('User', backref='department')
     faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.id'))
+    course_ids = db.relationship('Course', backref='department_course')
 
     def __repr__(self):
         return '{}'.format(self.id)
@@ -123,3 +124,9 @@ class Faculty(db.Model):
 
     def __repr__(self):
         return '{}'.format(self.id)
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    title = db.Column(db.String(10))
+    department_id = db.Column(db.Integer, db.ForeignKey('department.id'))

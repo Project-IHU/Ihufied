@@ -2,8 +2,8 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required
 from ihufied import db
 from . import portal
-from app.models import User, Faculty, Department
-from app.portal.forms import MakeFacultyForm, MakeDepartmentForm
+from app.models import User, Faculty, Department, Course
+from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm
 
 ###################
 #### ALL-VIEWS ####
@@ -31,7 +31,8 @@ def registered_students():
 def modify_dept():
 	makefacultyform = MakeFacultyForm()
 	makedepartmentform = MakeDepartmentForm()
-	return render_template('/portal/modify_dept.html',makefacultyform=makefacultyform,makedepartmentform=makedepartmentform)
+	makecourseform = MakeCourseForm()
+	return render_template('/portal/modify_dept.html',makefacultyform=makefacultyform,makedepartmentform=makedepartmentform,makecourseform=makecourseform)
 
 @portal.route('/create_faculty', methods=['POST'])
 @login_required
@@ -61,6 +62,27 @@ def create_department():
 			db.session.add(department)
 			db.session.commit()
 			flash('Department created!', 'success')
+			return redirect(url_for('portal.modify_dept'))
+		else:
+			flash('Please fill in the form correctly!', 'warning')
+			return redirect(url_for('portal.modify_dept'))
+	except Exception as e:
+		flash('{}'.format(e), 'warning')
+		return redirect(url_for('portal.modify_dept'))
+
+@portal.route('/create_course', methods=['POST'])
+@login_required
+def create_course():
+	form = MakeCourseForm()
+	try:
+		if form.validate_on_submit():
+			course = Course(name=form.name.data,department_id=str(form.department.data),title=form.title.data)
+			db.session.add(course)
+			db.session.commit()
+			flash('Course created successfully.', 'success')
+			return redirect(url_for('portal.modify_dept'))
+		else:
+			flash('Please fill in the form correctly!', 'warning')
 			return redirect(url_for('portal.modify_dept'))
 	except Exception as e:
 		flash('{}'.format(e), 'warning')

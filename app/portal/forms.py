@@ -33,7 +33,6 @@ class MakeStudentForm(FlaskForm):
 		if user:
 			raise ValidationError('Reg number already exists!')
 
-
 class RegisterStudentCourse(FlaskForm):
 	regnumber = IntegerField('',
 		validators=[DataRequired('Please fill in a reg number')])
@@ -58,3 +57,14 @@ class MakeDepartmentForm(FlaskForm):
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(MakeDepartmentForm, self).__init__(*args, **kwargs)
+
+class MakeCourseForm(FlaskForm):
+	name = StringField('',
+		validators=[DataRequired('Please fill in the course name')])
+	department = QuerySelectField(query_factory=department_query, allow_blank=True, get_label='name', validators=[DataRequired('Please select a department')])
+	title = StringField('',
+		validators=[DataRequired('Please fill in the course initial')])
+
+	def __init__(self, *args, **kwargs):
+		kwargs['csrf_enabled'] = False
+		super(MakeCourseForm, self).__init__(*args, **kwargs)

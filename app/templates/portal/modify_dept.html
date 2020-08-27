@@ -18,7 +18,6 @@
 		<h4>Create Department</h4><hr style="background-color: #fff;">
 	     <form action="{{url_for('portal.create_department')}}" method="POST">
 	     	{{ makedepartmentform.hidden_tag() }}
-	     	{% from 'includes/_formhelpers.html' import render_field %}
 		  <div class="form-group">
 		  	<div class="row">
 		  	<div class="col-md-6">
@@ -28,6 +27,29 @@
 			<div class='col-md-6'>
 				<label for="relatedfaculty"></label>
 		    	{{render_field(makedepartmentform.faculty, class_='form-control', id='relatedfaculty', required='true')}}
+			</div>
+		</div>
+		  </div>
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+	<div class="mt-4">
+		<h4>Create Course</h4><hr style="background-color: #fff;">
+	     <form action="{{url_for('portal.create_course')}}" method="POST">
+	     	{{ makecourseform.hidden_tag() }}
+		  <div class="form-group">
+		  	<div class="row">
+		  	<div class="col-md-4">
+			    <label for="coursename">Course name</label>
+			    {{render_field(makecourseform.name, class_='form-control', id='coursename', required='true')}}
+			</div>
+			<div class="col-md-4">
+			    <label for="coursetitle">Course Title</label>
+			    {{render_field(makecourseform.title, class_='form-control', id='coursetitle', required='true')}}
+			</div>
+			<div class='col-md-4'>
+				<label for="relateddepartment"></label>
+		    	{{render_field(makecourseform.department, class_='form-control', id='relateddepartment', required='true')}}
 			</div>
 		</div>
 		  </div>
