@@ -2,17 +2,42 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required
 from ihufied import db
 from . import portal
+from app.utils import save_picture, delete_picture
+from passlib.hash import sha256_crypt as sha256
 from app.models import User, Faculty, Department, Course
-from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm
+from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm, MakeStudentForm
 
 ###################
 #### ALL-VIEWS ####
 ###################
 
-@portal.route('/register_student')
+@portal.route('/register_student', methods=['GET','POST'])
 @login_required
 def register_student():
-    return render_template('/portal/register_student.html')
+	form = MakeStudentForm()
+	if form.validate_on_submit() and form.image.data:
+		hashed_password = sha256.encrypt(str(form.firstname.data))		
+		try:
+			picture_name = save_picture(form.image.data)
+			print('saved picture')
+			student = User(firstname=form.firstname.data,lastname=form.lastname.data,middlename=form.middlename.data,department_id=str(form.department.data),regnumber=form.regnumber.data,email=form.email.data,phone=form.phone.data,level=form.level.data,password=hashed_password,image_name=picture_name[0],image=picture_name[1])
+			print('saved')
+			db.session.add(student)
+			db.session.commit()
+			flash('Student registered successfully.', 'success')
+			return redirect(url_for('portal.register_student_courses'))
+		except Exception as e:
+			delete_picture(form.image.data)
+			flash(str(e), 'warning')
+		return redirect(url_for('portal.register_student'))
+	return render_template('/portal/register_student.html', form=form)
+
+@portal.route('/register_student_courses', methods=['GET','POST'])
+@login_required
+def register_student_courses():
+
+	return render_template('/portal/register_student_courses.html')
+
 
 @portal.route('/remote_monitoring')
 @login_required
@@ -22,9 +47,9 @@ def remote_monitoring():
 @portal.route('/registered_students')
 @login_required
 def registered_students():
-	page = request.args.get('page', 1 , type=int)
-	students = User.query.order_by(User.lastname.asc()).paginate(page=page, per_page=25)
-	return render_template('/portal/registered_students.html', students=students)
+	# page = request.args.get('page', 1 , type=int)
+	# students = User.query.order_by(User.lastname.asc()).paginate(page=page, per_page=25)
+	return render_template('/portal/registered_students.html') #,students=students)
 
 @portal.route('/modify_dept')
 @login_required
@@ -87,3 +112,4 @@ def create_course():
 	except Exception as e:
 		flash('{}'.format(e), 'warning')
 		return redirect(url_for('portal.modify_dept'))
+
