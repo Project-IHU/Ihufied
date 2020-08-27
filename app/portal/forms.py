@@ -49,6 +49,11 @@ class MakeFacultyForm(FlaskForm):
 		kwargs['csrf_enabled'] = False
 		super(MakeFacultyForm, self).__init__(*args, **kwargs)
 
+	def validate_faculty(self, faculty):
+		faculty = Faculty.query.filter_by(faculty=name.data).first()
+		if faculty:
+			raise ValidationError('Faculty already exists!')
+
 class MakeDepartmentForm(FlaskForm):
 	name = StringField('',
 		validators=[DataRequired('Please fill in the faculty name')])
@@ -57,6 +62,11 @@ class MakeDepartmentForm(FlaskForm):
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(MakeDepartmentForm, self).__init__(*args, **kwargs)
+
+	def validate_department(self, department):
+		department = Department.query.filter_by(department=name.data).first()
+		if department:
+			raise ValidationError('Department already exists!')
 
 class MakeCourseForm(FlaskForm):
 	name = StringField('',
@@ -68,3 +78,16 @@ class MakeCourseForm(FlaskForm):
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(MakeCourseForm, self).__init__(*args, **kwargs)
+
+	def validate_course(self, course):
+		course = User.query.filter_by(course=name.data).first()
+		if course:
+			raise ValidationError('Course already exists!')
+
+class RegisterStudentCourse(FlaskForm):
+	regnumber = IntegerField('',
+		validators=[DataRequired('Please fill in a reg number')])
+
+	def __init__(self, *args, **kwargs):
+		kwargs['csrf_enabled'] = False
+		super(RegisterStudentCourse, self).__init__(*args, **kwargs)

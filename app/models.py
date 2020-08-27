@@ -9,6 +9,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 def load_user(user_id):
     return Admin.query.get(int(user_id))
 
+coursesubs = db.Table('coursesubs',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id'))
+    )
 
 class Admin(db.Model, UserMixin):
     __tablename__ = 'admins'
@@ -106,6 +110,7 @@ class User(db.Model):
     department_id = db.Column(db.Integer, db.ForeignKey('department.id')) 
     password = db.Column(db.String(120), nullable=False)
     user_status = db.Column(db.String(10), nullable=False, default='student')
+    course_subscription = db.relationship('Course', secondary=coursesubs, backref=db.backref('course_subscribers', lazy='dynamic'))
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -5,7 +5,7 @@ from . import portal
 from app.utils import save_picture, delete_picture
 from passlib.hash import sha256_crypt as sha256
 from app.models import User, Faculty, Department, Course
-from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm, MakeStudentForm
+from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm, MakeStudentForm, RegisterStudentCourse
 
 ###################
 #### ALL-VIEWS ####
@@ -35,9 +35,20 @@ def register_student():
 @portal.route('/register_student_courses', methods=['GET','POST'])
 @login_required
 def register_student_courses():
-
-	return render_template('/portal/register_student_courses.html')
-
+	form = RegisterStudentCourse()
+	if form.validate_on_submit():
+		try:
+			student = User.query.filter_by(regnumber=form.regnumber.data).first()
+			if student:
+				courses = student.department.course_ids
+				return render_template('/portal/register_student_courses.html', form=form, courses=courses,student_number=student)
+			else:
+				flash('Reg number does not exist!', 'warning')
+				return redirect(url_for('portal.register_student_courses'))
+		except Exception as e:
+			flash(str(e), 'warning')
+			return redirect(url_for('portal.register_student_courses'))
+	return render_template('/portal/register_student_courses.html', form=form, courses=[], student_number='')
 
 @portal.route('/remote_monitoring')
 @login_required
@@ -113,3 +124,21 @@ def create_course():
 		flash('{}'.format(e), 'warning')
 		return redirect(url_for('portal.modify_dept'))
 
+@portal.route('/submit_registered_courses/<string:student_number>', methods=['POST'])
+@login_required
+def submit_registered_courses(student_number):
+	try:
+		student = User.query.filter_by(regnumber=student_number).first()
+		print('1: {}'.format(student.course_subscription))
+		del student.course_subscription
+		print('2: {}'.format(student.course_subscription))
+		for title in request.form.getlist('course_select'):
+			get_course = Course.query.filter_by(title=title).first()
+			get_course.course_subscribers.append(student)
+		print('3: {}'.format(student.course_subscription))
+		db.session.commit()
+		flash('Courses registered successfully!', 'success')
+		return redirect(url_for('portal.register_student_courses'))
+	except Exception as e:
+		flash(str(e), 'warning')
+		return redirect(url_for('portal.register_student_courses'))
