@@ -9,6 +9,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 def load_user(user_id):
     return Admin.query.get(int(user_id))
 
+coursesubs = db.Table('coursesubs',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id'))
+    )
+
 class Admin(db.Model, UserMixin):
     __tablename__ = 'admins'
     id = db.Column(db.Integer, primary_key=True)
@@ -91,3 +96,42 @@ class Admin(db.Model, UserMixin):
     def __repr__(self):
         return '<Admin %r>' %self.username
         
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(30), default='')
+    lastname = db.Column(db.String(30), default='')
+    middlename = db.Column(db.String(30), default='')
+    regnumber = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(50), default='')
+    phone = db.Column(db.String(15), default='')
+    image = db.Column(db.Text)
+    image_name = db.Column(db.String(50), default='')
+    level = db.Column(db.String(3), default='')
+    department_id = db.Column(db.Integer, db.ForeignKey('department.id')) 
+    password = db.Column(db.String(120), nullable=False)
+    user_status = db.Column(db.String(10), nullable=False, default='student')
+    course_subscription = db.relationship('Course', secondary=coursesubs, backref=db.backref('course_subscribers', lazy='dynamic'))
+
+class Department(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    students = db.relationship('User', backref='department')
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.id'))
+    course_ids = db.relationship('Course', backref='department_course')
+
+    def __repr__(self):
+        return '{}'.format(self.id)
+
+class Faculty(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    department_id = db.relationship('Department', backref='faculty_department')
+
+    def __repr__(self):
+        return '{}'.format(self.id)
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    title = db.Column(db.String(10))
+    department_id = db.Column(db.Integer, db.ForeignKey('department.id'))

@@ -57,6 +57,7 @@
 .wrapper .content {
   width: 100%;
   margin-left: 0rem;
+  margin-top: 4rem;
   -webkit-transition: all ease 0.25s;
   transition: all ease 0.25s;
 }
@@ -76,6 +77,12 @@
   }
   .navbar-expand-lg .navbar-nav .nav-link {
     margin-right: 2rem;
+  }
+  .navbar{
+    position: fixed;
+    top: 0;
+    width: 100vw;
+
   }
   .wrapper .sideMenu {
     -webkit-transform: translateX(0);
