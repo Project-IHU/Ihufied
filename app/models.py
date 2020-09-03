@@ -111,8 +111,9 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     user_status = db.Column(db.String(10), nullable=False, default='student')
     course_subscription = db.relationship('Course', secondary=coursesubs, backref=db.backref('course_subscribers', lazy='dynamic'))
-
-class Department(db.Model):
+ 
+    
+class Department(db.Model):  
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
     students = db.relationship('User', backref='department')
@@ -135,3 +136,4 @@ class Course(db.Model):
     name = db.Column(db.String(80))
     title = db.Column(db.String(10))
     department_id = db.Column(db.Integer, db.ForeignKey('department.id'))
+    

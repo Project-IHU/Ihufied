@@ -55,12 +55,23 @@ def register_student_courses():
 def remote_monitoring():
     return render_template('/portal/monitoring.html')
 
-@portal.route('/registered_students')
+@portal.route('/registered_students', methods= ['GET','POST'])
 @login_required
 def registered_students():
-	# page = request.args.get('page', 1 , type=int)
-	# students = User.query.order_by(User.lastname.asc()).paginate(page=page, per_page=25)
-	return render_template('/portal/registered_students.html') #,students=students)
+	page = request.args.get('page', 1 , type=int)
+	student= User.query.order_by(User.lastname.asc()).paginate(page=page, per_page=25)
+	if request.method == 'POST':
+		if request.form['detail']:
+				the_student= request.form['detail']
+				student= User.query.filter_by(id=the_student)		
+				return render_template ('/portal/student_details.html',student=student)
+	else:
+		return render_template('/portal/registered_students.html',student =student)
+
+@portal.route('/edit_courses', methods =['GET','POST'])
+@login_required
+def edit_courses():
+    	return render_template('portal/edit_courses.html')
 
 @portal.route('/modify_dept')
 @login_required

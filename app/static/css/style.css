@@ -137,4 +137,13 @@
 .nav-link:hover .icon, .nav-link:hover .text, .nav-link:active .icon, .nav-link:active .text {
   color: #8fc7ecd2;
 }
+
+ table, th, td {
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
 /*# sourceMappingURL=style.css.map */
+
