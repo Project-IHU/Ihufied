@@ -76,18 +76,6 @@ def edit_courses(student_reg):
 	current=url_for('static', filename='images/' + student.image_name)
 	courses=student.department.course_ids #this line gets all the courses for department of this particular student
 	form=EditStudentCourses()
-	if form.validate_on_submit():
-		if form.picture.data:
-			new_photo=update_picture(form.picture.data)
-			student.image_name= new_photo
-		del student.course_subscription 
-		for the_course in request.form.getlist('courses'):
-			get_course= Course.query.filter_by(title=the_course).first()
-			
-			get_course.course_subscribers.append(student)
-		db.session.commit()
-		flash("Update Successful",'success')
-		redirect(url_for('portal.registered_students'))
 	return render_template ('/portal/edit_courses.html',student=student,form=form,current=current,courses=courses)	
 
 @portal.route('/modify_dept')
