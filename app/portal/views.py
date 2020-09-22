@@ -1,11 +1,11 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_required
+from flask_login import login_required,current_user
 from ihufied import db
 from . import portal
-from app.utils import save_picture, delete_picture
+from app.utils import save_picture, delete_picture,update_picture
 from passlib.hash import sha256_crypt as sha256
 from app.models import User, Faculty, Department, Course
-from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm, MakeStudentForm, RegisterStudentCourse
+from app.portal.forms import MakeFacultyForm, MakeDepartmentForm, MakeCourseForm, MakeStudentForm, RegisterStudentCourse,EditStudentCourses
 
 ###################
 #### ALL-VIEWS ####
@@ -63,18 +63,35 @@ def registered_students():
 	if request.method == 'POST':
 		if request.form['detail']:
 				the_student= request.form['detail']
-				student= User.query.filter_by(id=the_student)		
+				student= User.query.filter_by(id=the_student)	
 				return render_template ('/portal/student_details.html',student=student)
+	
 	else:
 		return render_template('/portal/registered_students.html',student =student)
 
-@portal.route('/edit_courses', methods =['GET','POST'])
+@portal.route('/edit_courses/<student_reg>', methods =['POST','GET'])
 @login_required
-def edit_courses():
-    	return render_template('portal/edit_courses.html')
+def edit_courses(student_reg):
+	student= User.query.filter_by(regnumber=student_reg).first()
+	current=url_for('static', filename='images/' + student.image_name)
+	courses=student.department.course_ids #this line gets all the courses for department of this particular student
+	form=EditStudentCourses()
+	if form.validate_on_submit():
+		if form.picture.data:
+			new_photo=update_picture(form.picture.data)
+			student.image_name= new_photo
+		del student.course_subscription 
+		for the_course in request.form.getlist('courses'):
+			get_course= Course.query.filter_by(title=the_course).first()
+			
+			get_course.course_subscribers.append(student)
+		db.session.commit()
+		flash("Update Successful",'success')
+		redirect(url_for('portal.registered_students'))
+	return render_template ('/portal/edit_courses.html',student=student,form=form,current=current,courses=courses)	
 
 @portal.route('/modify_dept')
-@login_required
+@login_required  
 def modify_dept():
 	makefacultyform = MakeFacultyForm()
 	makedepartmentform = MakeDepartmentForm()
@@ -84,7 +101,6 @@ def modify_dept():
 @portal.route('/create_faculty', methods=['POST'])
 @login_required
 def create_faculty():
-	form = MakeFacultyForm()
 	try:
 		if form.validate_on_submit():
 			faculty = Faculty(name=form.name.data)
@@ -140,6 +156,10 @@ def create_course():
 def submit_registered_courses(student_number):
 	try:
 		student = User.query.filter_by(regnumber=student_number).first()
+		form=EditStudentCourses()
+		if form.picture.data:
+			new_photo=update_picture(form.picture.data)
+			student.image_name=new_photo
 		print('1: {}'.format(student.course_subscription))
 		del student.course_subscription
 		print('2: {}'.format(student.course_subscription))
@@ -149,7 +169,7 @@ def submit_registered_courses(student_number):
 		print('3: {}'.format(student.course_subscription))
 		db.session.commit()
 		flash('Courses registered successfully!', 'success')
-		return redirect(url_for('portal.register_student_courses'))
+		return redirect(url_for('portal.registered_students'))
 	except Exception as e:
 		flash(str(e), 'warning')
 		return redirect(url_for('portal.register_student_courses'))

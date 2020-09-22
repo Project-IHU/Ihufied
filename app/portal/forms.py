@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from app.models import User, Department, Faculty
-from wtforms import StringField, TextAreaField, SelectField, IntegerField, DateField, PasswordField
+from wtforms import StringField, TextAreaField, SelectField, IntegerField, DateField, PasswordField, SubmitField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, ValidationError, Email, EqualTo
 from wtforms_sqlalchemy.fields import QuerySelectField
@@ -83,11 +83,7 @@ class MakeCourseForm(FlaskForm):
 		course = User.query.filter_by(course=name.data).first()
 		if course:
 			raise ValidationError('Course already exists!')
-
-class RegisterStudentCourse(FlaskForm):
-	regnumber = IntegerField('',
-		validators=[DataRequired('Please fill in a reg number')])
-
-	def __init__(self, *args, **kwargs):
-		kwargs['csrf_enabled'] = False
-		super(RegisterStudentCourse, self).__init__(*args, **kwargs)
+class EditStudentCourses(FlaskForm):
+	
+	picture = FileField('Update Student Photo',validators=[FileAllowed(["png","jpg"])])
+	submit  = SubmitField('Update')

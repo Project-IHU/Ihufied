@@ -2,10 +2,10 @@ import os
 import click
 from app import create_app, db
 from app.models import Admin
-from flask_migrate import Migrate
 
 app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
-migrate = Migrate(app, db)
+
+
 
 @app.shell_context_processor
 def make_shell_context():
@@ -16,7 +16,7 @@ def make_shell_context():
 def test(test_names):
     """Run the unit tests."""
     import unittest
-    if test_names:
+    if test_names: 
         tests = unittest.TestLoader().loadTestsFromNames(test_names)
     else:
         tests = unittest.TestLoader().discover('tests')
