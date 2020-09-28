@@ -55,9 +55,9 @@
                                       
                             {%endfor%}
                             
-                            <form action="{{url_for('portal.edit_courses')}}" method="POST">
-                                <button type="submit" class="btn btn-primary btn-block" name="edit">Edit Courses</button>
-                             </form>
+                            <form action="{{url_for('portal.edit_courses', student_reg=student.regnumber)}}" method="POST">
+                                <button type="submit" class="btn btn-primary btn-block" name="courses" value="{{student.id}}">Edit Courses/Photo </button>
+                            </form>
                         </div>
                     </div>
                 </div>

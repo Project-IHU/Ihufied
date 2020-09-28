@@ -11,12 +11,12 @@ def load_user(user_id):
 
 coursesubs = db.Table('coursesubs',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('course_id', db.Integer, db.ForeignKey('course.id'))
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id')),
     )
 
 class Admin(db.Model, UserMixin):
     __tablename__ = 'admins'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True )
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128), unique=True)
@@ -132,7 +132,7 @@ class Faculty(db.Model):
         return '{}'.format(self.id)
 
 class Course(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(80))
     title = db.Column(db.String(10))
     department_id = db.Column(db.Integer, db.ForeignKey('department.id'))
