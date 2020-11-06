@@ -16,7 +16,7 @@ This simple guide is aimed to help you setup and run the program successfully in
 4. In your terminal, run ```set FLASK_APP=ihufied.py```.
 5. Run ```flask db upgrade```. To get your migration files in sync.
 
-You can run the program now, by running ```python ihufied.py``` on the terminal. But things are not yet all set up,, so the registration of student feature wouldn't work properly.
+You can run the program now, by running ```python ihufied.py``` on the terminal. But things are not yet all set up, so the registration of student feature wouldn't work properly.
 
 If you would be testing out the registration feature which uses the flask mail package to send a confirmation message. Then, there are still a couple of environment variables to set.
 
@@ -25,7 +25,7 @@ If you would be testing out the registration feature which uses the flask mail p
 
 If you are bothered about security, try creating a secondary gmail account just for this. Also ensure to allow unsecured apps in the gmail settings of the account you provided above.
 
-Also try changing the `MAIL_DEFAULT_SENDER` varible on line 12 of the `config.py` file to the your personal gmail account. If you have any issues you can try this quick fix, change the following settings in the config file.
+Also try changing the `MAIL_DEFAULT_SENDER` variable on line 12 of the `config.py` file to the your personal gmail account. If you have any issues you can try this quick fix, change the following settings in the config file.
 1. `MAIL_USE_SSL` to `MAIL_USE_TLS`
 2. Also, change the value in the `MAIL_PORT` variable from `465` to `587`.
 
