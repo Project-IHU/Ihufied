@@ -21,7 +21,7 @@ You can run the program now, by running ```python ihufied.py``` on the terminal.
 If you would be testing out the registration feature which uses the flask mail package to send a confirmation message. Then, there are still a couple of environment variables to set.
 
 6. In the terminal, run ```MAIL_USERNAME=youraccount@gmail.com```, please replace `youraccount@gmail.com` with your personal gmail account.
-7. Also, run `MAIL_PASSWORD=yourgmailpassword` similarly replace 'yourgmailpassword' with the password to the corresponding gmail account
+7. Also, run `MAIL_PASSWORD=yourgmailpassword` similarly replace `yourgmailpassword` with the password to the corresponding gmail account
 
 If you are bothered about security, try creating a secondary gmail account just for this. Also ensure to allow unsecured apps in the gmail settings of the account you provided above.
 
