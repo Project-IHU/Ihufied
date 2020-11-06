@@ -10,9 +10,9 @@ This simple guide is aimed to help you setup and run the program successfully in
 3. Install the latest version of Python3
 
 ### Getting ready to run the program | Steps
-1. Clone the the repository, 'Ihufied'.
+1. Clone the the repository, `Ihufied`.
 2. Create a virtual environment
-3. Activate it and run '''pip install -r requirements.txt''' command on your terminal in the directory of the ihufied repository that is cloned on your PC or Mac. This will install all the necessary packages needed to run this program on your virtual environment.
+3. Activate it and run ```pip install -r requirements.txt``` command on your terminal in the directory of the ihufied repository that is cloned on your PC or Mac. This will install all the necessary packages needed to run this program on your virtual environment.
 4. In your terminal, run ''''set FLASK_APP=ihufied.py'''.
 5. Run ''''flask db upgrade'''. To get your migration files in sync.
 
