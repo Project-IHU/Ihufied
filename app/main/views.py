@@ -5,12 +5,15 @@ from . import main
 # from flask_restful import Resource, Api
 from app.models import User, Faculty, Department, Course
 import json
+import base64
 
 #api = Api(main)
 
 ###################
 #### ALL-VIEWS ####
 ###################
+
+
 
 @main.route('/')
 def index():
@@ -28,8 +31,9 @@ def getuser(course_title):
 			students = {}
 			students['firstname'] = student.firstname
 			students['lastname'] = student.lastname
-			students['regnumber'] = student.regnumber
-			students['image'] = str(student.image)
+			students['reg_no'] = student.regnumber
+			#convert the students image stored in bytes to str so it can be passable with json on line 41
+			students['img'] = student.image.decode('utf-8') 
 			students_list.append(students)
 		if students_list == []:
 			return 'No student registered!'
