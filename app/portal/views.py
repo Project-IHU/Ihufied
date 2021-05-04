@@ -89,6 +89,7 @@ def modify_dept():
 @portal.route('/create_faculty', methods=['POST'])
 @login_required
 def create_faculty():
+	form = MakeFacultyForm()
 	try:
 		if form.validate_on_submit():
 			faculty = Faculty(name=form.name.data)
